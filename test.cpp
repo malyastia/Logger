@@ -2,11 +2,12 @@
 #include "catch2/catch.hpp"
 #include "logger.hpp"
 
-#include <string>
-
 
 TEST_CASE( "multiple arguments" ) {
     
     Logger Log;
-    Log.trace("HI %13","STR","STR","STR","STR","STR","STR","STR","STR","STR","STR","STR","9999","111");
+    std::vector<int> vec{1,2,3};
+
+    Log.trace("HI %1", 1);
+    Log.trace("HI %2", 1,"2");
 } 

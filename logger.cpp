@@ -31,7 +31,7 @@ void Logger:: set_level(level_type level){
 };
 
 void Logger:: write( ){
-    m_out << m_logger_message;
+    m_out << m_logger_message.str();
     m_out << "\n";
 
 };
