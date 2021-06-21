@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LOGGER
+#define LOGGER
 
 #include <iostream>
 #include <chrono>
@@ -8,59 +9,44 @@
 #include <sstream>
 #include <vector>
 
-#include <map> 
+#include <deque>
 
+template< template<typename T, typename> class S, typename T>
+std::stringstream& operator<<( std::stringstream& output, const S<T, std::deque<T>> &sequence)
+{
+    output << '[';
+    
 
-	/*std::for_each(vec2.begin(), vec2.end(), [](auto& n) { std::cout << n << " "; });
-	*///std::cout << std::endl;
-// template <class First, class Second>
-// std::stringstream& operator<<(std::stringstream& output, const std::pair<First, Second>& p);
-// template <class Iter>
-// std::stringstream& PrintSequence(std::stringstream& output, Iter begin, Iter end);
-                     
-// template <class T1,class T2>                                  
-// inline std::stringstream& operator<<( std::stringstream& output,  const std::vector<T1,  T2>& seq) { 
-// return PrintSequence(output, seq.begin(), seq.end() );           
-// }
-                        
-// template <class T1, class T2, class T3, class T4>                      
-// inline std::stringstream& operator<<( std::stringstream& output, const std::map<T1, T2, T3, T4>& seq) { 
-// return PrintSequence(output, seq.begin(), seq.end());                   
-// }
+    output << ']';
+    return output;
+}
 
-// template <class First, class Second>
-// inline std::stringstream& operator<<(std::stringstream& output,
-//                                 const std::pair<First, Second>& p) {
-//   output << '(' << p.first << ", " << p.second << ')';
-//   return output;
-// }
-
-// template <typename T, size_t N>
-// inline std::stringstream& operator<<( std::stringstream& output,
-//                                 const std::array<T, N>& seq) {
-//   return PrintSequence(output, seq.begin(), seq.end());
-// }
-
-// template <class Iter>
-// inline std::stringstream& PrintSequence( std::stringstream& output, Iter begin, Iter end) {
-//   output << '[';
-//   for (int i = 0; begin != end; ++i, ++begin) {
-//     if (i > 0) output << ", ";
-//     output << *begin;
-//   }
-//   if (begin != end) {
-//     output << " ...";
-//   }
-//   output << ']';
-//   return output;
-// }
-
+template<typename T, typename Alloc, template <typename, typename> class Container>
+std::stringstream& operator<<( std::stringstream& output, const Container<T, Alloc> &sequence)
+{
+    output << '{';
+    for (auto&& first : sequence) {
+        output << " " << first ;
+    }
+    output << '}';
+    return output;
+}
 
 class Logger{
 public:
-    explicit Logger();
-    explicit Logger(const char* file_name);
-    ~Logger();
+    explicit Logger():
+    m_out( std::cout )
+    , m_logger_level(TRACE)
+    { };
+
+    explicit Logger(const char* file_name)
+    : m_of(file_name) 
+    , m_out( m_of )
+    , m_logger_level(TRACE)
+    , m_logger_file_name( file_name)
+    { };
+
+    ~Logger(){};
 
     enum level_type{
         FATAL,
@@ -71,7 +57,9 @@ public:
         TRACE
     };
 
-    void set_level(level_type level);
+    void set_level(const level_type level){
+        m_logger_level = level;
+    };
     
     void trace( const std::string& msg){
         m_logger_message.str("");
@@ -79,10 +67,10 @@ public:
         write();
     };
 
-    template<typename Arg, typename ... Args> 
-    void trace( const std::string& msg, Arg&& arg, Args&& ... args ){
+    template<typename ... Args> 
+    void trace( const std::string& msg, Args&& ... args ){
         m_logger_message.str("");
-        log( msg , std::forward<Arg>(arg), std::forward<Args>(args) ...);
+        log( msg, std::forward<Args>(args) ...);
         write();
     };
 
@@ -164,7 +152,11 @@ private:
         log_impl(fmt, strs, std::forward<Arg>(arg), std::forward<Args>(args) ...);
     }
 
-    void write();
+    void write(){
+        m_out << m_logger_message.str();
+        m_out << "\n";
+
+    };
 
     std::string m_logger_error;
     tm* m_time;
@@ -178,3 +170,5 @@ private:
     std::string m_logger_file_name;
 
 };
+
+#endif
