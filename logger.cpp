@@ -1,37 +1,37 @@
 #include "logger.hpp"
 
-void Logger:: write(level_type lvl){
-    if( m_logging_level >= lvl){
-        m_out << m_datetime_level.str();
-        m_datetime_level.str("");
-    }else{
-        m_datetime_level.str("");
-    }
+#include <vector>
+
+#include <iostream>
+
+Logger:: Logger()
+: m_out( std::cout )
+{ 
+    m_logger_level = TRACE;
 };
 
-void  Logger:: time_recording_and_level(level_type level){
-    
-    current_time_and_date_in_m_datetime_level();
-    m_datetime_level << " ";
-    switch (level)
-    {
-    case INFO:
-        m_datetime_level << "INFO";
-        break;
-    case DEBUG:
-        m_datetime_level << "DEBUG";
-        break;
-    case WARN: 
-        m_datetime_level << "WARN";
-        break;
-    case ERROR:
-        m_datetime_level << "ERROR";
-        break;
-    case TRACE:
-        m_datetime_level << "TRACE";
-        break;
-    default:
-        m_datetime_level << "FATAL";
-        break;
+Logger:: Logger(const char* file_name) 
+: m_of(file_name) 
+, m_out( m_of )
+{  
+    if ( !m_of.good() ){
+        std::cout << "error when opening";
     }
+    else{
+        m_logger_file_name = file_name;
+        m_logger_level = TRACE;
+    }
+    
+};
+
+Logger:: ~Logger(){}
+
+void Logger:: set_level(level_type level){
+    m_logger_level = level;
+};
+
+void Logger:: write( ){
+    m_out << m_logger_message;
+    m_out << "\n";
+
 };
