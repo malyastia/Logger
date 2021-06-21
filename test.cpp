@@ -1,16 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch2/catch.hpp"
 #include "logger.hpp"
-<<<<<<< HEAD
-#include <string>
-
-
-TEST_CASE( "multiple arguments" ) {
-    
-    Logger Log;
-    Log.trace("HI %2",1,"str");
-} 
-=======
 
 #include <string>
 
@@ -180,4 +170,3 @@ TEST_CASE( "multiple arguments" ) {
 //         CHECK(i == i);
 //     }
 // }
->>>>>>> 313c421befdd7dc9e92e26aae85e5416413bcc32
