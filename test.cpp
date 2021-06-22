@@ -27,13 +27,13 @@ TEST_CASE( "multiple arguments" ) {
     
     std::stack<int> st;
     st.push(5);
-    st.push(5);
+    st.push(4);
     Log.trace("stack %1", st);
 
     std::queue<int> que;
     que.push(7);
-    que.push(7);
-    que.push(7);
+    que.push(8);
+    que.push(9);
     Log.trace("queue %1", que);
     
     // Log.trace("HI %2", 1,"2");

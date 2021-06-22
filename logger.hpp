@@ -10,19 +10,11 @@
 #include <vector>
 
 #include <deque>
-
-template< template<typename T, typename> class S, typename T>
-std::stringstream& operator<<( std::stringstream& output, const S<T, std::deque<T>> &sequence)
-{
-    output << '[';
-    
-
-    output << ']';
-    return output;
-}
+#include <stack>
+#include <queue>
 
 template<typename T, typename Alloc, template <typename, typename> class Container>
-std::stringstream& operator<<( std::stringstream& output, const Container<T, Alloc> &sequence)
+inline std::stringstream& operator<<( std::stringstream& output, const Container<T, Alloc> &sequence)
 {
     output << '{';
     for (auto&& first : sequence) {
@@ -31,6 +23,34 @@ std::stringstream& operator<<( std::stringstream& output, const Container<T, All
     output << '}';
     return output;
 }
+
+template<typename T>
+inline std::stringstream& operator<<( std::stringstream& output, const std::stack<T, std::deque<T>> &sequence)
+{
+    std::stack<T, std::deque<T>> st = sequence;
+    output << '[';
+    while( !st.empty()){
+        output << " " << st.top();
+        st.pop();
+    }
+    output << ']';
+    return output;
+}
+
+template<typename T>
+inline std::stringstream& operator<<( std::stringstream& output, const std::queue<T, std::deque<T>> &sequence)
+{
+    std::queue<T, std::deque<T>> que = sequence;
+    output << '[';
+    while( !que.empty()){
+        output << " " << que.front();
+        que.pop();
+    }
+    output << ']';
+    return output;
+}
+
+
 
 class Logger{
 public:
