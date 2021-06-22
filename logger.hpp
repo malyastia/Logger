@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <chrono>
 #include <fstream>
@@ -81,7 +83,7 @@ public:
     , m_logging_level(TRACE)
     { };
 
-    explicit Logger(const char* file_name)
+    explicit Logger(std::string file_name)
     : m_of(file_name) 
     , m_out( m_of )
     , m_logging_level(TRACE)
